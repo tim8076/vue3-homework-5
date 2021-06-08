@@ -27,6 +27,9 @@
            :temp-product="tempProduct"
            :isNew="false"
            @add-cart="addToCart">
+           <template v-slot:title>
+               <h5 class="modal-title" id="exampleModalLabel">{{ tempProduct.title }}</h5>
+           </template>
            <template v-slot:content>
                <div class="row">
                    <div class="col-sm-4">
@@ -69,6 +72,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <pagination :page="pagination"
+                        @changePage="getProducts">
+                </pagination> 
             </div>
         </div>
     </div>
@@ -404,7 +412,10 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-light">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
+                    <!-- 使用slot 預設值 -->
+                    <slot name="title"> 
+                        <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
+                    </slot>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

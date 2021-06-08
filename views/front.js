@@ -1,6 +1,7 @@
 
 import headerComponent from '../component/header.js'
 import modal from '../component/modal.js'
+import pagination from '../component/pagination.js'
 
 export default {
     template: "#front",
@@ -26,6 +27,7 @@ export default {
     components:{
         headerComponent,
         modal,
+        pagination
     },
     methods: {
         openModal(product){
@@ -33,6 +35,7 @@ export default {
             this.$refs.frontModal.openModal();
         },
         getProducts(page = 1){
+            this.isLoading = true;
             axios.get(`${this.api}api/${this.path}/products?page=${page}`)
                 .then(res => {
                     console.log(res);
@@ -43,6 +46,7 @@ export default {
                     } else {
                         alert(res.data.message);
                     }
+                    this.isLoading = false;
                 })
         },
         addToCart(id){
@@ -112,7 +116,7 @@ export default {
             })
         },
         sendOder(){
-            if (this.carts.length === 0) return alert('購物車沒商品，請前往選購');
+            if (!this.carts.length) return alert('購物車沒商品，請前往選購');
             this.isLoading = true;
             axios.post(`${this.api}api/${this.path}/order`, {
                 data: {
@@ -123,8 +127,7 @@ export default {
             .then(res =>{
                 if(res.data.success){
                     alert(res.data.message);
-                    const order = Object.keys(this.order);
-                    order.forEach(item =>{
+                    Object.keys(this.order).forEach(item =>{
                         this.order[item] = '';
                     })
                     this.getCart();
